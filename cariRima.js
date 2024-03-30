@@ -3,6 +3,9 @@ const readline = require("readline");
 
 const INPUT_PATH = "entri.txt";
 const OUTPUT_DIR = "rima/";
+
+const tunggalFlag = process.argv.find(arg => arg === '--tunggal');
+const majemukFlag = process.argv.find(arg => arg === '--majemuk');
 const needle = process.argv[2] || "";
 const outputPath = OUTPUT_DIR + `-${needle}.txt`;
 
@@ -27,6 +30,8 @@ rl.on("line", (line) => {
   const lastIndex = line.lastIndexOf(needle);
 
   if (lastIndex > -1 && lastIndex === lineLength - needleLength) {
+    if (tunggalFlag && line.includes(" ")) return
+    if (majemukFlag && !line.includes(" ")) return
     result.push(line);
   }
 });
