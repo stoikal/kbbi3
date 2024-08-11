@@ -2,16 +2,18 @@ const fs = require("fs");
 const readline = require("readline");
 
 const INPUT_PATH = "entri.txt";
-const OUTPUT_DIR = "rima/";
+const OUTPUT_DIR = "akhir/";
 
-const tunggalFlag = process.argv.find(arg => arg === '--tunggal');
-const majemukFlag = process.argv.find(arg => arg === '--majemuk');
-const needle = process.argv[2] || "";
+const isTunggal = ['--tunggal', '-t'].some((flag) => process.argv.includes(flag));
+const isMajemuk = ['--majemuk', '-m'].some((flag) => process.argv.includes(flag));
+const needle = process.argv[2] ? process.argv[2].toLocaleLowerCase() : "";
 const outputPath = OUTPUT_DIR + `-${needle}.txt`;
 
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 }
+
+const outputStream = fs.createWriteStream(outputPath);
 
 const inputStream = fs.createReadStream(INPUT_PATH);
 
@@ -20,9 +22,7 @@ const rl = readline.createInterface({
   crlfDelay: Infinity // Recognize all instances of CR LF ('\r\n') as a single line break
 });
 
-
-const outputStream = fs.createWriteStream(outputPath);
-const result = []
+const result = [];
 
 rl.on("line", (line) => {
   const needleLength = needle.length;
@@ -30,8 +30,8 @@ rl.on("line", (line) => {
   const lastIndex = line.lastIndexOf(needle);
 
   if (lastIndex > -1 && lastIndex === lineLength - needleLength) {
-    if (tunggalFlag && line.includes(" ")) return
-    if (majemukFlag && !line.includes(" ")) return
+    if (isTunggal && line.includes(" ")) return
+    if (isMajemuk && !line.includes(" ")) return
     result.push(line);
   }
 });
